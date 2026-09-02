@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<title>Tips &amp; Tricks — Shadow Garden</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="app">
+
+  <div class="topbar">
+    <a href="index.html" class="brand"><span class="dot"></span>SHADOW GARDEN</a>
+    <div class="patch-badge">SEASON 41 · 2.1.95</div>
+  </div>
+
+  <div class="ticker">
+    <div class="ticker-track" id="tickerTrack"></div>
+  </div>
+
+  <section class="screen" id="screen-tips">
+    <div class="screen-head">
+      <a class="back-btn" href="index.html">←</a>
+      <div class="screen-title">Tips &amp; Tricks</div>
+    </div>
+    <p class="screen-lede">Seven habits that matter more than mechanical skill in the current sustain-heavy meta. Tap to expand.</p>
+    <div class="tip-list" id="tipList"></div>
+  </section>
+
+</div>
+
+<script src="script.js"></script>
+<script>
+  const tips = [
+    {
+      title:'Win the laning phase',
+      color:'var(--marksman)',
+      body:"Freeze the wave near your own turret against aggressive matchups so the enemy has to overextend to hit you. Push fast only when you want to recall or rotate. Every minion you deny is XP and gold the enemy doesn't get."
+    },
+    {
+      title:'Jungle on a timer',
+      color:'var(--fighter)',
+      body:"Use Retribution the moment it's off cooldown — every second it sits unused is wasted clear speed. After clearing a camp, check the map before you rotate; a gank only works if the lane is actually pushed toward you."
+    },
+    {
+      title:'Check the minimap constantly',
+      color:'var(--mage)',
+      body:"Glance at the minimap every few seconds, not just when a fight breaks out. A missing enemy hero is the single biggest warning sign in the game — assume they're rotating toward you until you see them again."
+    },
+    {
+      title:'Focus fire, not feelings',
+      color:'var(--assassin)',
+      body:"Target the hero your team can actually kill fastest, not the one that's annoying you. Tanks and supports should engage on cooldowns they've tracked from the enemy, not on gut instinct."
+    },
+    {
+      title:'Group before objectives spawn',
+      color:'var(--support)',
+      body:"Set up vision around Turtle or Lord ten seconds before the timer hits zero, not after it's already up. Contesting with a full team beats arriving late with more damage."
+    },
+    {
+      title:'Build anti-heal on sight',
+      color:'var(--tank)',
+      body:"In a sustain-heavy meta, the moment you spot a healer or lifesteal-heavy build on the enemy team, slot in an anti-heal item. It swings fights harder than a straight damage item would."
+    },
+    {
+      title:'Keep a flexible hero pool',
+      color:'var(--marksman)',
+      body:"Have two or three heroes ready per role so a single ban doesn't wreck your draft. Muting toxic teammates costs nothing and keeps your focus on decisions instead of the chat."
+    },
+  ];
+
+  const tipList = document.getElementById('tipList');
+  tipList.innerHTML = tips.map((t, i) => `
+    <div class="tip-card" style="--tip-color:${t.color}">
+      <button class="tip-head" onclick="this.parentElement.classList.toggle('open')">
+        <span style="display:flex;align-items:center;">
+          <span class="tip-num">0${i+1}</span>
+          <span class="tip-title">${t.title}</span>
+        </span>
+        <span class="tip-chevron">▾</span>
+      </button>
+      <div class="tip-body">
+        <div class="tip-body-inner">${t.body}</div>
+      </div>
+    </div>
+  `).join('');
+</script>
+</body>
+</html>

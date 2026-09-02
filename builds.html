@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<title>Hero Builds — Shadow Garden</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="app">
+
+  <div class="topbar">
+    <a href="index.html" class="brand"><span class="dot"></span>SHADOW GARDEN</a>
+    <div class="patch-badge">SEASON 41 · 2.1.95</div>
+  </div>
+
+  <div class="ticker">
+    <div class="ticker-track" id="tickerTrack"></div>
+  </div>
+
+  <section class="screen" id="screen-builds">
+    <div class="screen-head">
+      <a class="back-btn" href="index.html">←</a>
+      <div class="screen-title">Hero Builds</div>
+    </div>
+    <p class="screen-lede">Starting-point builds for Season 41, Patch 2.1.95. Filter by role, tap a hero to open their full loadout.</p>
+    <div class="role-filter" id="roleFilter"></div>
+    <div class="hero-list" id="heroList"></div>
+    <p class="disclaimer">Builds are a starting framework, not gospel — adjust items 3–6 to the enemy draft every game, and re-check win rates after major patches since the meta shifts fast.</p>
+  </section>
+
+</div>
+
+<script src="script.js"></script>
+<script>
+  const heroes = [
+    {
+      name:'Khufra', role:'tank', lane:'Roam',
+      summary:"Bounces onto a target, strips their defensive buffs, and locks the enemy carry down before your team collapses on them.",
+      items:['Tough Boots','Dominance Ice','Cursed Helmet','Antique Cuirass',"Athena's Shield",'Immortality'],
+      emblem:"Tank Emblem — take the crowd-control-duration talent so Bounce and Impale hold targets a little longer.",
+      spell:'Flicker or Sprint — either closes the gap onto a squishy target you\'ve already picked out.',
+      tip:"Save your ultimate to strip a shield or immunity buff right before your team engages — timing beats raw stats here."
+    },
+    {
+      name:'Minotaur', role:'tank', lane:'Roam / Jungle',
+      summary:"A tank-support hybrid whose Fury meter fills as he takes and deals damage, unlocking a game-swinging heal-and-stun ultimate.",
+      items:['Warrior Boots','Blade Armor','Antique Cuirass','Dominance Ice',"Athena's Shield",'Immortality'],
+      emblem:"Tank Emblem — the talent that boosts damage reduction below half HP keeps him in fights long enough to build Fury.",
+      spell:'Sprint — closes distance fast so you can start stacking Fury before the enemy peels away.',
+      tip:"Clear a jungle camp or two before you roam so your ultimate is already charged when the first fight breaks out."
+    },
+    {
+      name:'Hanzo', role:'assassin', lane:'Jungle',
+      summary:"A clone-based assassin who baits skillshots with Ninja Steps and punishes the whiff, then closes games with a teleporting execute ultimate.",
+      items:['Raptor Machete (jungle)','Swift Boots','Endless Battle','Blade of Despair','Malefic Roar','Immortality'],
+      emblem:"Assassin Emblem — the bonus movement speed on skill use helps you weave your clone in and out of fights.",
+      spell:'Retribution early for jungle clear, switching mindset to burst kills once ganks open up mid-game.',
+      tip:"Use the clone swap to bait a skillshot before you commit — Hanzo wins trades on positioning, not raw stat checks."
+    },
+    {
+      name:'Masha', role:'fighter', lane:'Jungle',
+      summary:"A tanky true-damage fighter who becomes immune to crowd control once her passive charge maxes out — built to dive straight through a peel line.",
+      items:['Rapid Boots','Blade of Heptaseas','Malefic Roar','Blade of Despair','Endless Battle'],
+      emblem:"Assassin Emblem — a burst-and-mark talent pairs with her true damage passive for faster picks.",
+      spell:"Sprint — lines up with her CC-immune burst window, letting her dive in and, if it goes wrong, walk straight back out.",
+      tip:"Masha is a late-game hero — play safe, watch the map, and play smart through the early-to-mid game. By late game she becomes a tank killer, and if you're willing to sacrifice yourself a kill is basically guaranteed — she can usually escape anyway thanks to her CC immunity across her 3 HP bars. She's a single-target hero, so pick the one enemy who matters most and commit to them."
+    },
+    {
+      name:'Melissa', role:'marksman', lane:'Gold Lane',
+      summary:"A hybrid marksman who switches between a mobile Human Mode and a hard-hitting Doll Mode to burst down marked targets.",
+      items:['Swift Boots',"Berserker's Fury",'Malefic Gun','Windtalker','Wind of Nature','Immortality'],
+      emblem:"Marksman Emblem — lean into the crit-chance or attack-speed talent depending on which your item build favors.",
+      spell:'Inspire in the late game to out-damage enemy carries, or Purify if the enemy has hard crowd control.',
+      tip:"Switch to Doll Mode only to burst a marked target, then swap back to Human Mode to kite — never sit in Doll Mode against a diving assassin."
+    },
+    {
+      name:'Rafaela', role:'support', lane:'Roam',
+      summary:"A pure healer whose slow scales into a hard stun the longer it's active, making her one of the best peel tools in the game.",
+      items:['Rapid Boots','Enchanted Talisman','Guardian Helmet','Ice Queen Wand','Oracle','Rose Gold Meteor'],
+      emblem:"Support Emblem — take the cooldown-reduction or heal-amplification talent so your heal and slow come online more often.",
+      spell:'Purify or Flicker — protect your marksman from an engage they otherwise can\'t escape.',
+      tip:"Hold your slow until the enemy fully commits to a dive — landing it too early wastes your best peel tool of the fight."
+    },
+    {
+      name:'Kagura', role:'mage', lane:'Mid Lane',
+      summary:"A high-skill-cap mage who pokes and burst-combos using an umbrella she throws and recalls, including a teleport-strike ultimate.",
+      items:['Swift Boots','Lightning Truncheon','Genius Wand','Holy Crystal','Divine Glaive','Immortality'],
+      emblem:"Mage Emblem — the cooldown-reduction talent lets you throw and recall the umbrella more often for sustained poke.",
+      spell:'Flicker — pairs with her umbrella-teleport combo for one of the highest single-target bursts in the game.',
+      tip:"Practice the throw-and-recall poke on the minion wave before trying it in a real combo — the umbrella's return path is what actually kills."
+    },
+    {
+      name:'Fredrinn', role:'tank', lane:'Jungle · Tank/Fighter',
+      summary:"A durable Tank/Fighter hybrid who punishes overextended enemies once his early items are up, finishing fights with a heavy-hitting ultimate.",
+      items:['Tough Boots','War Axe','Brute Force Breastplate','Guardian Helmet',"Queen's Wings",'Radiant Armor'],
+      emblem:"Support Emblem — running the Season Hunter and Impure Rage talents for extra sustain and team utility.",
+      spell:"Inspire — extra attack speed for the whole team once fights start dragging on.",
+      tip:"Fredrinn is a weaker tank early — avoid taking unnecessary damage until you've got your first two items online, and use his skills with precision. In teamfights, land your ultimate on the squishiest hero you can reach."
+    },
+    {
+      name:'Thamuz', role:'fighter', lane:'Jungle',
+      summary:"A fire-fueled jungle fighter built to shred tanks in the mid-to-late game, though he's vulnerable to being dove in the earliest skirmishes.",
+      items:['Tough Boots','Corrosion Scythe','War Axe','Oracle',"Queen's Wings",'Guardian Helmet'],
+      emblem:"Fighter Emblem — the Killing Spree talent rewards you for finishing kills quickly, matching his burst, CD-reduction build.",
+      spell:"Flicker — closes the gap for a burst combo or bails you out when a fight goes wrong.",
+      tip:"Thamuz is weak in the early game — he dies fast in first-turtle fights, so if you're playing him as a hyper jungler, it's usually best to skip contesting the first turtle."
+    },
+    {
+      name:'Layla', role:'marksman', lane:'Gold Lane',
+      summary:"A classic hypercarry marksman who trades early fragility for some of the highest raw damage output in the late game once she's farmed up.",
+      items:['Rapid Boots','Windtalker',"Haas's Claws","Berserker's Fury",'Malefic Gun','Blade of Despair'],
+      emblem:"Marksman Emblem — a damage-vs-marked-target talent squeezes extra poke out of every trade.",
+      spell:"Inspire — a late-game attack speed boost that lets her out-DPS almost any other core in a straight fight.",
+      tip:"Attack Speed & Crit Chance turns her into a poke-and-kite marksman — stay at max range, weave in autos during the laning phase, and lean on Wind of Nature's evasion to survive dives instead of trading blows."
+    },
+    {
+      name:'Xavier', role:'mage', lane:'Mid Lane',
+      summary:"A mid-lane burst mage whose damage compounds hard the longer the game goes — a genuine late-game core pick if he survives to scale.",
+      items:['Necklace of Durance','Genius Wand','Lightning Truncheon',"Ice Queen Wand",'Holy Crystal','Fleeting Time'],
+      emblem:"Mage Emblem — a gold-efficiency talent gets his core items online faster, which matters most for a hero built to scale.",
+      spell:"Inspire — extra attack speed and magic power for your whole team once the late game arrives.",
+      tip:"As a Late Game Core pick, farm safely through the laning phase and avoid unnecessary trades — Xavier's damage snowballs hard once his core items are online, so patience early pays off in huge burst later."
+    },
+    {
+      name:'Ammon', role:'mage', lane:'Jungle · Mage/Assassin',
+      summary:"A Mage/Assassin hybrid built around sharp burst rotations — flex between emblems depending on whether you need more penetration or more mobility.",
+      items:['Arcane Boots','Genius Wand','Holy Crystal','Feathers of Haven','Windtalker','Divine Glaive'],
+      emblem:"Mage or Assassin Emblem — flex based on the matchup, running the Swift, Seasoned Hunter, and Lethal Ignition talents.",
+      spell:"Retribution — clears jungle camps fast and gives him the extra damage vs monsters/turrets to secure objectives.",
+      tip:"Ammon's kit rewards patience — clear efficiently, then hang back until your combo pieces line up before committing everything into one rotation instead of poking piece by piece. A single clean burst on the right target can end a fight before the enemy can peel, so scout the squishiest, most isolated hero before you engage rather than just the closest one."
+    },
+  ];
+
+  const roleFilter = document.getElementById('roleFilter');
+  roleFilter.innerHTML = ['all', ...roles.map(r=>r.key)].map(key => {
+    const roleObj = roles.find(r => r.key === key);
+    const label = key === 'all' ? 'All Roles' : roleObj.label;
+    const color = key === 'all' ? 'var(--parchment)' : roleObj.color;
+    return `<button class="role-chip ${key==='all'?'active':''}" data-role="${key}" style="--chip-color:${color}" onclick="filterRole('${key}', this)">${label}</button>`;
+  }).join('');
+
+  function filterRole(key, btn){
+    document.querySelectorAll('.role-chip').forEach(c => c.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.hero-card').forEach(card => {
+      const match = key === 'all' || card.dataset.role === key;
+      card.classList.toggle('hidden', !match);
+    });
+  }
+
+  const heroList = document.getElementById('heroList');
+  heroList.innerHTML = heroes.map(h => {
+    const roleObj = roles.find(r => r.key === h.role);
+    const itemsHtml = h.items.map((item, i) =>
+      `<span class="item-pill"><span class="step">${i+1}</span>${item}</span>`
+    ).join('');
+    return `
+    <div class="hero-card" data-role="${h.role}" style="--role-color:${roleObj.color}">
+      <button class="hero-head" onclick="this.parentElement.classList.toggle('open')">
+        <span class="hero-tag">${roleObj.label}</span>
+        <span class="hero-name-wrap">
+          <div class="hero-name">${h.name}</div>
+          <div class="hero-lane">${h.lane}</div>
+        </span>
+        <span class="hero-tier">S-TIER<br>SEASON 41</span>
+      </button>
+      <div class="hero-body">
+        <div class="hero-body-inner">
+          <p class="hero-summary">${h.summary}</p>
+
+          <div class="build-block">
+            <div class="build-label">Item Build</div>
+            <div class="item-chain">${itemsHtml}</div>
+          </div>
+
+          <div class="build-block">
+            <div class="build-label">Emblem</div>
+            <p class="build-text">${h.emblem}</p>
+          </div>
+
+          <div class="build-block">
+            <div class="build-label">Battle Spell</div>
+            <p class="build-text">${h.spell}</p>
+          </div>
+
+          <div class="tip-callout">${h.tip}</div>
+        </div>
+      </div>
+    </div>
+  `;
+  }).join('');
+</script>
+</body>
+</html>
